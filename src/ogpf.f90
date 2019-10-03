@@ -132,6 +132,11 @@
 ! Date:     Jan 5th, 2012
 ! First object-based version
 
+! Custom Gnuplot executable
+#ifndef _GNUPLOT
+#define _GNUPLOT "gnuplot"
+#endif
+
 module ogpf
 
     implicit none
@@ -2151,7 +2156,7 @@ contains
         this%hasfileopen = .false.        ! reset file open flag
         this%hasanimation = .false.
         ! Use shell command to run gnuplot
-        call execute_command_line ('gnuplot -persist ' // this%txtfilename)  !   Now plot the results
+        call execute_command_line( _GNUPLOT//' -persist ' // this%txtfilename)  !   Now plot the results
 
     end subroutine finalize_plot
 
