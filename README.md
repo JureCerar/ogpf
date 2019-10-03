@@ -1,5 +1,70 @@
 # ogpf
+
+[![GitHub version](https://img.shields.io/github/release/kookma/ogpf.svg?label=Version&color=blue)](https://github.com/kookma/ogpf/releases)
+![Language](https://img.shields.io/badge/Language-Fortran-brightgreen.svg)
+[![License](https://img.shields.io/badge/License-MIT-red.svg)](https://github.com/kookma/ogpf/blob/master/LICENSE)
+
 Object Based Interface to GnuPlot from Fortran (ogpf)
+
+## Build & Install
+
+Clone or download repository from GitHub:
+```bash
+git clone https://github.com/JureCerar/ogpf
+```
+Move into directory and type the following:
+```bash
+mkdir build
+cd build
+cmake ..
+make
+make demo
+```
+To install library type the following as *root* (or *sudo*):
+```bash
+make install
+```
+You should consider using the following [CMake options](https://cmake.org/cmake/help/v3.6/manual/cmake.1.html) with the appropriate value instead of `xxx`:
+- `-DCMAKE_Fortran_COMPILER=xxx` equal to the name of the Fortran Compiler you wish to use (or the ENV variable `FC`)
+- `-DCMAKE_INSTALL_PREFIX=xxx` to install ogfp to a non-standard location (default `/usr/local/lib/`)  
+- `-DCMAKE_BUILD_TYPE=xxx` equal to `RELEASE` for normal build or `DEBUG` for debugging purposes.
+
+## Usage
+
+To use the library always put `use ogfp` in the module section:
+```fortran
+program main
+	use ogfp
+	implicit none
+	! ...
+end program main
+```
+
+and use `-logfp` flag when compiling your program. You may also need to use `-I` flag to point to where the modules files are (default *-I/usr/local/include*) even with all of the right environment variables set. When linking use `-L` to point to library file (default *-L/usr/local/lib*).
+
+To make things easier **pkg-config** file is also included to help you with your program compilation. You may need to add the config file to `PKG_CONFIG_PATH` environment variable (default */usr/local/lib/pkgconfig*).
+
+```bash
+pkg-config ogfp --libs --cflags
+```
+
+Alternatively, the library can be added via **CMake**:
+```cmake
+# Find package
+find_package ( ogfp 0.22.0 REQUIRED )
+include_directories ( ${ogfp_INCLUDE_DIRS} )
+
+...
+
+# Link package
+target_link_libraries ( ${CMAKE_PROJECT_NAME} ${ogfp_LIBRARIES} )
+```
+
+In case of non-standard installation path use the following CMake option (with the appropriate value instead of `xxx`):
+- `-Dogfp_DIR=xxx` equal to path to `ogfp-config.cmake` (default is */usr/local/lib/cmake/ogfp-X.Y.Z/* ).
+
+______________________________________________________________________________________
+
 
 ## 2D Plots
 
@@ -69,7 +134,7 @@ Surface                        | Contour
 Nine different color palettes are available. See [Ann Schnider](https://github.com/aschn/gnuplot-colorbrewer) gnuplot color palettes and [Gnuplotting](https://github.com/Gnuplotting/gnuplot-palettes).
 These color palettes can be used with:
 
-> `surf(x,y,z,palette='plt-name')` 
+> `surf(x,y,z,palette='plt-name')`
 
 > `contour(x,y,z,palette='plt-name')`
 
@@ -83,7 +148,7 @@ These color palettes can be used with:
 * accent
 * jet
 
-## The ogpf library other features 
+## The ogpf library other features
 There are a plenety commands to customise the plots. This includes:
 
 * Plot annotation (e.g. title, xlabel, ylabel, and zlabel)
@@ -116,7 +181,7 @@ Use several options each uses separate command
 `call gp%options('set tics font ",8"') ! font size for tics`
 
 
-* **Sample 4** 
+* **Sample 4**
 
 Set several options at the same time using semicolon as delimiter
 
@@ -579,7 +644,7 @@ will produce
 
 ```fortran
      subroutine exmp18()
-  
+
         !Use gnuplot script
         !to send a special external script file to gnuplot
         !the file is an external file here is called "simple.plt"
@@ -944,7 +1009,7 @@ Contour plot and surface plot with color palette
 ```fortran
 
     subroutine exmp105()
-        
+
         type(gpf):: gp
 
         real(wp), allocatable:: x(:,:)
@@ -1083,5 +1148,3 @@ Multiplot layout for 3D plots
 Will produce
 
 ![Example 107](doc/exmp107_2.png)
-
-
